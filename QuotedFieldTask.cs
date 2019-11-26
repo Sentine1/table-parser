@@ -25,17 +25,19 @@ namespace TableParser
     {
         public static Token ReadQuotedField(string line, int startIndex)
         {
-                char startChar = line[startIndex];              //Записываем какие кавычки " или ';
-                string actualline = line.Substring(startIndex); //Берём подстроку за кавычками;
-                int tokenLenght = actualline.Length;                                                    //actualline.TrimStart(startChar);
+                char[] startChar = {'\'','"'};                  //Записываем какие кавычки " или ';
+                string actualline = line.Substring(startIndex);     //Берём подстроку за кавычками;
+                int tokenLenght = actualline.Length;                
                 for (int i = 0; i < line.Length; i++)
                 {
-                actualline.Trim(startChar);
-                if ((actualline[i] == startChar) && (startChar =='\'' || startChar =='\"' ) && (i - 1 > 0) && (actualline[i - 1] != '\\'))
+                
+
+                if (startChar.Contains(line[i]) && (line[i] =='\'' || line[i] == '\"' ) && (i - 1 > 0) && (actualline[i - 1] != '\\'))
                     {
                         actualline = line.Substring(startIndex + 1, i-1);
                         tokenLenght = actualline.Length + 2;
-                    break;
+                        ReadQuotedField(actualline,i);
+                        break;
                     }
                 }
             return new Token(actualline, startIndex, tokenLenght);
